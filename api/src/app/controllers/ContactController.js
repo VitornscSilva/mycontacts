@@ -22,7 +22,7 @@ class ContactController {
 
   async store(request, response) {
     const {
-      name, email, phone, categoryId,
+      name, email, phone, category_id,
     } = request.body;
 
     if (!name) {
@@ -36,7 +36,7 @@ class ContactController {
     }
 
     const contact = await ContactsRepository.create({
-      name, email, phone, categoryId,
+      name, email, phone, category_id,
     });
 
     response.json(contact);
@@ -46,7 +46,7 @@ class ContactController {
     const { id } = request.params;
 
     const {
-      name, email, phone, categoryId,
+      name, email, phone, category_id,
     } = request.body;
 
     const contactExists = await ContactsRepository.findById(id);
@@ -68,7 +68,7 @@ class ContactController {
       name,
       email,
       phone,
-      categoryId,
+      category_id,
     });
 
     response.json(contact);
