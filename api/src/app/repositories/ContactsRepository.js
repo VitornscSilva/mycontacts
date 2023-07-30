@@ -1,5 +1,7 @@
 const { v4 } = require('uuid');
 
+const db = require('../../database');
+
 let contacts = [
   {
     id: v4(),
@@ -36,22 +38,16 @@ class ContactsRepository {
     });
   }
 
-  create({
+  async create({
     name, email, phone, categoryId,
   }) {
-    return new Promise((resolve) => {
-      const newContact = {
-        id: v4(),
-        name,
-        email,
-        phone,
-        categoryId,
-      };
+    const [row] = await db.query(`
+      INSERT INTO contacts(name, email, phone, categoryId)
+      VALUES($1, $2, $3, $4)
+      RETURNING *
+    `, [name, email, phone, categoryId]);
 
-      contacts.push(newContact);
-
-      resolve(newContact);
-    });
+    return row;
   }
 
   update(id, {
