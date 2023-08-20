@@ -1,3 +1,9 @@
+import PageHeader from '../../components/PageHeader';
+
 export default function EditContact() {
-  return 'Edit contact';
+  return (
+    <PageHeader
+      title="Edit Contact"
+    />
+  );
 }
