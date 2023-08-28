@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import {
   Container, InputSearchContainer, Header, ListContainer, Card,
 } from './styles';
@@ -14,7 +15,7 @@ export default function Home() {
       </InputSearchContainer>
       <Header>
         <strong>3 contacts</strong>
-        <a href="/contacts/id">New Contact</a>
+        <Link to="/new">New Contact</Link>
       </Header>
 
       <ListContainer>
@@ -36,47 +37,9 @@ export default function Home() {
           </div>
 
           <div className="actions">
-            <a href="/">
+            <Link to="/edit/1">
               <img src={edit} alt="Edit" />
-            </a>
-            <button type="button">
-              <img src={trash} alt="Delete" />
-            </button>
-          </div>
-        </Card>
-        <Card>
-          <div className="info">
-            <div className="contact-name">
-              <strong>Vitor Silva</strong>
-              <small>instagram</small>
-            </div>
-            <span>vitor@code.com</span>
-            <span>(85) 99999-9999</span>
-          </div>
-
-          <div className="actions">
-            <a href="/">
-              <img src={edit} alt="Edit" />
-            </a>
-            <button type="button">
-              <img src={trash} alt="Delete" />
-            </button>
-          </div>
-        </Card>
-        <Card>
-          <div className="info">
-            <div className="contact-name">
-              <strong>Vitor Silva</strong>
-              <small>instagram</small>
-            </div>
-            <span>vitor@code.com</span>
-            <span>(85) 99999-9999</span>
-          </div>
-
-          <div className="actions">
-            <a href="/">
-              <img src={edit} alt="Edit" />
-            </a>
+            </Link>
             <button type="button">
               <img src={trash} alt="Delete" />
             </button>
