@@ -11,6 +11,7 @@ export default styled.select`
   font-size: 16px;
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.04);
   transition: border-color 0.2s ease-in;
+  appearance: none;
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.primary.main};
