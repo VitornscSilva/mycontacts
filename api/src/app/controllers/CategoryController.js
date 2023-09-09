@@ -13,7 +13,7 @@ class CategoryController {
     const category = await CategoriesRepository.findById(id);
 
     if (!category) {
-      return response.status(404).json({ message: 'Category not found' });
+      return response.status(404).json({ error: 'Category not found' });
     }
 
     response.json(category);
@@ -25,13 +25,13 @@ class CategoryController {
     } = request.body;
 
     if (!name) {
-      return response.status(400).json({ message: 'Name is required' });
+      return response.status(400).json({ error: 'Name is required' });
     }
 
     const categoryExists = await CategoriesRepository.findByName(name);
 
     if (categoryExists) {
-      return response.status(400).json({ message: 'This name is already in use' });
+      return response.status(400).json({ error: 'This name is already in use' });
     }
 
     const category = await CategoriesRepository.create({
@@ -50,17 +50,17 @@ class CategoryController {
 
     const categoryExists = await CategoriesRepository.findById(id);
     if (!categoryExists) {
-      return response.status(404).json({ message: 'Category not found' });
+      return response.status(404).json({ error: 'Category not found' });
     }
 
     if (!name) {
-      return response.status(400).json({ message: 'Name is required' });
+      return response.status(400).json({ error: 'Name is required' });
     }
 
     const categoryByName = await CategoriesRepository.findByName(name);
 
     if (categoryByName && categoryByName.id !== id) {
-      return response.status(400).json({ message: 'This name is already in use' });
+      return response.status(400).json({ error: 'This name is already in use' });
     }
 
     const contact = await CategoriesRepository.update(id, {

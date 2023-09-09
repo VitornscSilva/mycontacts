@@ -14,7 +14,7 @@ class ContactController {
 
     if (!contact) {
       // 404: Not Found
-      return response.status(404).json({ message: 'Contact not found' });
+      return response.status(404).json({ error: 'Contact not found' });
     }
 
     response.json(contact);
@@ -26,13 +26,13 @@ class ContactController {
     } = request.body;
 
     if (!name) {
-      return response.status(400).json({ message: 'Name is required' });
+      return response.status(400).json({ error: 'Name is required' });
     }
 
     const contactExists = await ContactsRepository.findByEmail(email);
 
     if (contactExists) {
-      return response.status(400).json({ message: 'This e-mail is already in use' });
+      return response.status(400).json({ error: 'This e-mail is already in use' });
     }
 
     const contact = await ContactsRepository.create({
@@ -51,17 +51,17 @@ class ContactController {
 
     const contactExists = await ContactsRepository.findById(id);
     if (!contactExists) {
-      return response.status(404).json({ message: 'Contact not found' });
+      return response.status(404).json({ error: 'Contact not found' });
     }
 
     if (!name) {
-      return response.status(400).json({ message: 'Name is required' });
+      return response.status(400).json({ error: 'Name is required' });
     }
 
     const contactByEmail = await ContactsRepository.findByEmail(email);
 
     if (contactByEmail && contactByEmail.id !== id) {
-      return response.status(400).json({ message: 'This e-mail is already in use' });
+      return response.status(400).json({ error: 'This e-mail is already in use' });
     }
 
     const contact = await ContactsRepository.update(id, {
