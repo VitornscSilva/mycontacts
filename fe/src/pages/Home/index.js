@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable no-nested-ternary */
 import { Link } from 'react-router-dom';
 import {
   useCallback, useEffect, useMemo, useState,
@@ -9,12 +11,16 @@ import {
   ListHeader,
   Card,
   ErrorContainer,
+  EmptyListContainer,
+  SearchNotFoundContainer,
 } from './styles';
 
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
 import trash from '../../assets/images/icons/trash.svg';
 import sad from '../../assets/images/sad.svg';
+import emptyBox from '../../assets/images/empty-box.svg';
+import magnifierQuestion from '../../assets/images/magnifier-question.svg';
 
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
@@ -69,6 +75,7 @@ export default function Home() {
     <Container>
       <Loader isLoading={isLoading} />
 
+      { contacts.length > 0 && (
       <InputSearchContainer>
         <input
           value={searchTerm}
@@ -77,15 +84,25 @@ export default function Home() {
           onChange={handleChangeSearchTerm}
         />
       </InputSearchContainer>
-      <Header hasError={hasError}>
-        {
-          !hasError && (
-            <strong>
-              {filteredContacts.length}
-              {filteredContacts.length === 1 ? ' contact' : ' contacts'}
-            </strong>
-          )
+      )}
+
+      <Header
+        justifyContent={
+          hasError
+            ? 'flex-end'
+            : (
+              contacts.length > 0
+                ? 'space-between'
+                : 'center'
+            )
         }
+      >
+        {(!hasError && contacts.length > 0) && (
+          <strong>
+            {filteredContacts.length}
+            {filteredContacts.length === 1 ? ' contact' : ' contacts'}
+          </strong>
+        )}
         <Link to="/new">New Contact</Link>
       </Header>
 
@@ -106,6 +123,28 @@ export default function Home() {
       {
         !hasError && (
           <>
+              {
+                (contacts.length < 1 && !isLoading) && (
+                  <EmptyListContainer>
+                    <img src={emptyBox} alt="Emtpy Box" />
+
+                    <p>
+                      You dont have any contacts registered yet!
+                      Click the <strong>”New contact”</strong> button
+                      above to add your first one
+                    </p>
+                  </EmptyListContainer>
+                )
+              }
+
+              {(contacts.length > 0 && filteredContacts.length < 1) && (
+                <SearchNotFoundContainer>
+                  <img src={magnifierQuestion} alt="Magnifier Question" />
+
+                  <span>Nenhum resultado foi encontrado para <strong>”{searchTerm}”</strong>.</span>
+                </SearchNotFoundContainer>
+              )}
+
               {filteredContacts.length > 0 && (
               <ListHeader orderBy={orderBy}>
                 <button type="button" onClick={handleToggleOrderBy}>
