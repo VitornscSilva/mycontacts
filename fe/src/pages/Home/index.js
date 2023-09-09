@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
+import {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import {
   Container,
   InputSearchContainer,
@@ -30,23 +32,24 @@ export default function Home() {
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   )), [contacts, searchTerm]);
 
-  useEffect(() => {
-    async function loadContacts() {
-      try {
-        setIsLoading(true);
+  const loadContacts = useCallback(async () => {
+    try {
+      setIsLoading(true);
 
-        const contactsList = await ContactsService.listContacts(orderBy);
+      const contactsList = await ContactsService.listContacts(orderBy);
 
-        setContacts(contactsList);
-      } catch {
-        setHasError(true);
-      } finally {
-        setIsLoading(false);
-      }
+      setHasError(false);
+      setContacts(contactsList);
+    } catch {
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
     }
-
-    loadContacts();
   }, [orderBy]);
+
+  useEffect(() => {
+    loadContacts();
+  }, [loadContacts]);
 
   function handleToggleOrderBy() {
     setOrderBy(
@@ -56,6 +59,10 @@ export default function Home() {
 
   function handleChangeSearchTerm({ target }) {
     setSearchTerm(target.value);
+  }
+
+  function handleTryAgain() {
+    loadContacts();
   }
 
   return (
@@ -88,44 +95,52 @@ export default function Home() {
             <img src={sad} alt="Sad" />
             <div className="details">
               <strong>An error occurred while retrieving your contacts!</strong>
-              <Button>Try Again</Button>
+              <Button type="button" onClick={handleTryAgain}>
+                Try Again
+              </Button>
             </div>
           </ErrorContainer>
         )
       }
 
-      {filteredContacts.length > 0 && (
-        <ListHeader orderBy={orderBy}>
-          <button type="button" onClick={handleToggleOrderBy}>
-            <span>Name</span>
-            <img src={arrow} alt="Arrow" />
-          </button>
-        </ListHeader>
-      )}
-
-      {filteredContacts?.map((contact) => (
-        <Card key={contact.id}>
-          <div className="info">
-            <div className="contact-name">
-              <strong>{contact.name}</strong>
-              {contact.category_name && (
-              <small>{contact.category_name}</small>
+      {
+        !hasError && (
+          <>
+              {filteredContacts.length > 0 && (
+              <ListHeader orderBy={orderBy}>
+                <button type="button" onClick={handleToggleOrderBy}>
+                  <span>Name</span>
+                  <img src={arrow} alt="Arrow" />
+                </button>
+              </ListHeader>
               )}
-            </div>
-            <span>{contact.email}</span>
-            <span>{contact.phone}</span>
-          </div>
 
-          <div className="actions">
-            <Link to={`/edit/${contact.id}`}>
-              <img src={edit} alt="Edit" />
-            </Link>
-            <button type="button">
-              <img src={trash} alt="Delete" />
-            </button>
-          </div>
-        </Card>
-      ))}
+            {filteredContacts?.map((contact) => (
+              <Card key={contact.id}>
+                <div className="info">
+                  <div className="contact-name">
+                    <strong>{contact.name}</strong>
+                    {contact.category_name && (
+                    <small>{contact.category_name}</small>
+                    )}
+                  </div>
+                  <span>{contact.email}</span>
+                  <span>{contact.phone}</span>
+                </div>
+
+                <div className="actions">
+                  <Link to={`/edit/${contact.id}`}>
+                    <img src={edit} alt="Edit" />
+                  </Link>
+                  <button type="button">
+                    <img src={trash} alt="Delete" />
+                  </button>
+                </div>
+              </Card>
+            ))}
+          </>
+        )
+      }
     </Container>
   );
 }
