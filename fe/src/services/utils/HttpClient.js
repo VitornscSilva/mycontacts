@@ -9,7 +9,7 @@ class HttpClient {
   get(path, options) {
     return this.makeRequest(path, {
       method: 'GET',
-      headers: options.headers,
+      headers: options?.headers,
     });
   }
 
