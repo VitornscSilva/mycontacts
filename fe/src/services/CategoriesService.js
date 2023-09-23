@@ -5,7 +5,7 @@ class CategoriesService {
     this.HttpClient = new HttpClient('http://localhost:8000');
   }
 
-  async listCategories() {
+  listCategories() {
     return this.HttpClient.get('/categories');
   }
 }
