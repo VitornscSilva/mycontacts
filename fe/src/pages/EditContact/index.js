@@ -5,11 +5,13 @@ import PageHeader from '../../components/PageHeader';
 import Loader from '../../components/Loader';
 import ContactsService from '../../services/ContactsService';
 import toast from '../../utils/toast';
+import useSafeAsyncAction from '../../hooks/useSafeAsyncAction';
 
 export default function EditContact() {
   const [isLoading, setIsLoading] = useState(true);
   const [contactName, setContactName] = useState('');
   const contactFormRef = useRef(null);
+  const safeAsyncAction = useSafeAsyncAction();
 
   const { id } = useParams();
   const history = useHistory();
@@ -21,20 +23,24 @@ export default function EditContact() {
           id,
         );
 
-        contactFormRef.current.setFieldsValues(contactData);
-        setContactName(contactData.name);
-        setIsLoading(false);
+        safeAsyncAction(() => {
+          contactFormRef.current.setFieldsValues(contactData);
+          setContactName(contactData.name);
+          setIsLoading(false);
+        });
       } catch {
-        history.push('/');
-        toast({
-          type: 'danger',
-          text: 'Contact was not found!',
+        safeAsyncAction(() => {
+          history.push('/');
+          toast({
+            type: 'danger',
+            text: 'Contact was not found!',
+          });
         });
       }
     }
 
     loadContact();
-  }, [id, history]);
+  }, [id, history, safeAsyncAction]);
 
   async function handleSubmit(formData) {
     try {
