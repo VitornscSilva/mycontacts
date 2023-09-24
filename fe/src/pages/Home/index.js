@@ -104,7 +104,7 @@ export default function Home() {
     } catch {
       toast({
         type: 'danger',
-        text: 'An error occur when trying to delete contact',
+        text: 'An error occurred when trying to delete the contact',
       });
     } finally {
       setIsLoadingDelete(false);
